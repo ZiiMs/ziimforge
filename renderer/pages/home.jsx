@@ -1,12 +1,15 @@
 import electron from 'electron';
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Link from 'next/link';
+import { Button } from 'rsuite';
+import 'rsuite/lib/styles/themes/dark/index.less';
+import NavBar from '../components/NavBar/NavBar';
 
 const ipcRenderer = electron.ipcRenderer || false;
 
 function Home() {
-  const [message, setMessage] = React.useState('no ipc message');
+  const [message, setMessage] = useState('no ipc message');
 
   const onClickWithIpc = () => {
     ipcRenderer.send('ping-pong', 'some data from ipcRenderer');
@@ -22,7 +25,7 @@ function Home() {
     // In this scope, the webpack process is the client
   }
 
-  React.useEffect(() => {
+  useEffect(() => {
     // like componentDidMount()
 
     // register `ping-pong` event
@@ -41,20 +44,21 @@ function Home() {
 
   return (
     <React.Fragment>
+      <NavBar />
       <Head>
         <title>Home - Nextron (ipc-communication)</title>
       </Head>
       <div>
         <p>
           ⚡ Electron + Next.js ⚡ -
-          <Link href="/next">
+          <Link href="/browse">
             <a>Go to next page</a>
           </Link>
         </p>
         <img src="/images/logo.png" />
         <hr />
-        <button onClick={onClickWithIpc}>IPC messaging</button>
-        <button onClick={onClickWithIpcSync}>IPC messaging (sync)</button>
+        <Button onClick={onClickWithIpc}>IPC messaging</Button>
+        <Button onClick={onClickWithIpcSync}>IPC messaging (sync)</Button>
         <p>{message}</p>
       </div>
     </React.Fragment>

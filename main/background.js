@@ -46,7 +46,7 @@ ipcMain.on('ping-pong', async (event, arg) => {
   }).catch(error => {
     console.error('Error fetching data: ', error);
   })
-  console.log(res);
+  // console.log(res);
   event.sender.send('ping-pong', res);
 });
 
