@@ -17,8 +17,8 @@ const NavLink = React.forwardRef((props, ref) => {
 const NavBar = () => (
   <Navbar>
     <Navbar.Header>
-      <a href="#" className="navbar-title logo">
-        RSUITE
+      <a href="/home" className="navbar-title logo">
+        ZiiMForge
       </a>
     </Navbar.Header>
     <Navbar.Body>
