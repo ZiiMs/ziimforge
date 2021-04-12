@@ -1,9 +1,14 @@
 const withLess = require('@zeit/next-less');
+
 module.exports = withLess({
   lessLoaderOptions: {
-    javascriptEnabled: true
+    javascriptEnabled: true,
   },
-  webpack: (config) => Object.assign(config, {
-    target: 'electron-renderer',
-  }),
+  webpack: config => {
+    Object.assign(config, {
+      target: 'electron-renderer',
+    });
+
+    return config;
+  },
 });

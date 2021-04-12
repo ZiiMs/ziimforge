@@ -1,5 +1,5 @@
-import React from 'react'
-import Link from 'next/link'
+import React from 'react';
+import Link from 'next/link';
 import { Nav, Navbar, Icon, Dropdown } from 'rsuite';
 import './NavBar.less';
 import 'rsuite/lib/styles/themes/dark/index.less';
@@ -9,29 +9,30 @@ const NavLink = React.forwardRef((props, ref) => {
   const { as, href, ...rest } = props;
   return (
     <Link href={href} as={as}>
-      <a ref={ref} {...rest} />
+      <p ref={ref} {...rest} />
     </Link>
   );
 });
 
 const NavBar = () => (
-  <Navbar>
-    <Navbar.Header>
-      <a href="/home" className="navbar-title logo">
-        ZiiMForge
-      </a>
-    </Navbar.Header>
+  <Navbar appearance="default">
     <Navbar.Body>
       <Nav>
-        <Nav.Item componentClass={NavLink} href="/home" icon={<Icon icon="home" />}>
+        <Nav.Item
+          componentClass={NavLink}
+          href="/home"
+          icon={<Icon icon="home" />}
+        >
           Home
         </Nav.Item>
-        <Nav.Item componentClass={NavLink} href="/browse">Browse</Nav.Item>
-        <Nav.Item >Products</Nav.Item>
+        <Nav.Item componentClass={NavLink} href="/browse">
+          Browse
+        </Nav.Item>
+        <Nav.Item>Products</Nav.Item>
         <Dropdown title="About">
-          <Dropdown.Item >Company</Dropdown.Item>
-          <Dropdown.Item >Team</Dropdown.Item>
-          <Dropdown.Item >Contact</Dropdown.Item>
+          <Dropdown.Item>Company</Dropdown.Item>
+          <Dropdown.Item>Team</Dropdown.Item>
+          <Dropdown.Item>Contact</Dropdown.Item>
         </Dropdown>
       </Nav>
       <Nav pullRight>
@@ -39,6 +40,6 @@ const NavBar = () => (
       </Nav>
     </Navbar.Body>
   </Navbar>
-)
+);
 
-export default NavBar
+export default NavBar;

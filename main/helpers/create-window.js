@@ -1,7 +1,4 @@
-import {
-  screen,
-  BrowserWindow,
-} from 'electron';
+import { screen, BrowserWindow } from 'electron';
 import Store from 'electron-store';
 
 export default function createWindow(windowName, options) {
@@ -9,8 +6,8 @@ export default function createWindow(windowName, options) {
   const name = `window-state-${windowName}`;
   const store = new Store({ name });
   const defaultSize = {
-    width: options.width,
     height: options.height,
+    width: options.width,
   };
   let state = {};
   let win;
@@ -21,10 +18,10 @@ export default function createWindow(windowName, options) {
     const position = win.getPosition();
     const size = win.getSize();
     return {
+      height: size[1],
+      width: size[0],
       x: position[0],
       y: position[1],
-      width: size[0],
-      height: size[1],
     };
   };
 
@@ -38,16 +35,17 @@ export default function createWindow(windowName, options) {
   };
 
   const resetToDefaults = () => {
-    const bounds = screen.getPrimaryDisplay().bounds;
-    return Object.assign({}, defaultSize, {
+    const { bounds } = screen.getPrimaryDisplay();
+    return {
+      ...defaultSize,
       x: (bounds.width - defaultSize.width) / 2,
-      y: (bounds.height - defaultSize.height) / 2
-    });
+      y: (bounds.height - defaultSize.height) / 2,
+    };
   };
 
-  const ensureVisibleOnSomeDisplay = (windowState) => {
+  const ensureVisibleOnSomeDisplay = windowState => {
     const visible = screen.getAllDisplays().some(display => {
-      return windowWithinBounds(windowState, display.bounds)
+      return windowWithinBounds(windowState, display.bounds);
     });
     if (!visible) {
       // Window is partially or fully not visible now.
@@ -70,8 +68,8 @@ export default function createWindow(windowName, options) {
     ...options,
     ...state,
     webPreferences: {
-      nodeIntegration: true,
       contextIsolation: false,
+      nodeIntegration: true,
       ...options.webPreferences,
     },
   });
@@ -79,4 +77,4 @@ export default function createWindow(windowName, options) {
   win.on('close', saveState);
 
   return win;
-};
+}
