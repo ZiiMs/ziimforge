@@ -13,55 +13,62 @@ const { Column, HeaderCell, Cell } = Table;
 function Browse() {
   const [mods, setMods] = useState([]);
   const [sortColumn, setsortColumn] = useState('downloadCount');
-  const [sortType, setsortType] = useState('desc');
+  const [sortType] = useState('desc');
   const [loading, setLoading] = useState(true);
   const { height } = useWindowDimensions();
-  // const mods = [];
   useEffect(() => {
-    // like componentDidMount(
-    ipcRenderer.on('fetchMods', async (event, data) => {
-      setMods(data);
-      // await setupMods(data);
+    ipcRenderer.invoke('fetchMods', 5).then(res => {
+      console.time('invokeMods');
+      console.log(res);
+      setMods(res);
       setLoading(false);
+      console.timeEnd('invokeMods');
     });
 
-    ipcRenderer.send('fetchMods');
-
     return () => {
-      // like componentWillUnmount()
-
-      // unregister it
       ipcRenderer.removeAllListeners('fetchMods');
     };
   }, []);
 
-  const getData = () => {
-    const data = mods;
-
-    if (sortColumn && sortType) {
-      return data.sort((a, b) => {
-        let x = a[sortColumn];
-        let y = b[sortColumn];
-        if (typeof x === 'string') {
-          x = x.charCodeAt();
-        }
-        if (typeof y === 'string') {
-          y = y.charCodeAt();
-        }
-        if (sortType === 'asc') {
-          return x - y;
-        }
-        return y - x;
-      });
+  const fetchData = sort => {
+    ipcRenderer.invoke('fetchMods', sort).then(res => {
+      console.time('invokeMods');
+      setMods(res);
+      setLoading(false);
+      console.timeEnd('invokeMods');
+    });
+  };
+  const getSortId = col => {
+    switch (col) {
+      case 'popularity': {
+        return 1;
+      }
+      case 'dateModified': {
+        return 2;
+      }
+      case 'name': {
+        return 3;
+      }
+      case 'authors': {
+        return 4;
+      }
+      case 'downloadCount': {
+        return 5;
+      }
+      default: {
+        return 5;
+      }
     }
-    return data;
   };
 
-  const handleSortColumn = (Col, Type) => {
-    setTimeout(() => {
-      setsortColumn(() => Col);
-      setsortType(() => Type);
-    }, 0);
+  const handleSortColumn = Col => {
+    if (Col !== sortColumn) {
+      setLoading(true);
+      fetchData(getSortId(Col));
+      setTimeout(() => {
+        setsortColumn(() => Col);
+      }, 500);
+    }
   };
 
   return (
@@ -75,7 +82,7 @@ function Browse() {
             wordWrap
             height={height - 56}
             loading={loading}
-            data={getData()}
+            data={mods}
             sortColumn={sortColumn}
             sortType={sortType}
             onSortColumn={handleSortColumn}
@@ -95,6 +102,17 @@ function Browse() {
               <Cell dataKey="downloadCount" />
             </Column>
 
+            <Column width={160} sortable>
+              <HeaderCell>Last Update</HeaderCell>
+              <Cell dataKey="dateModified">
+                {data => {
+                  const date = new Date(data.dateModified);
+                  const dateString = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`;
+                  return <p>{dateString}</p>;
+                }}
+              </Cell>
+            </Column>
+
             <Column flexGrow={2}>
               <HeaderCell>Categories</HeaderCell>
               <Cell dataKey="categories">
@@ -110,7 +128,7 @@ function Browse() {
               </Cell>
             </Column>
 
-            <Column flexGrow={2}>
+            <Column flexGrow={2} sortable>
               <HeaderCell>Authors</HeaderCell>
               <Cell dataKey="authors">
                 {data => {
@@ -125,7 +143,7 @@ function Browse() {
               </Cell>
             </Column>
 
-            <Column width={120} fixed="right">
+            <Column width={140} fixed="right">
               <HeaderCell>Action</HeaderCell>
 
               <Cell dataKey="id">

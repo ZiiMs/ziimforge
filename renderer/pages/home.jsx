@@ -1,12 +1,15 @@
 // import electron from 'electron';
-import React from 'react';
+import React, { useContext } from 'react';
 import Head from 'next/head';
 import Page from '../components/Page/page';
+import { preference } from '../context/preferenceContext';
 // import { Button } from 'rsuite';
 // import 'rsuite/lib/styles/themes/dark/index.less';
 // import NavBar from '../components/NavBar/NavBar';
 
 function Home() {
+  const { theme } = useContext(preference);
+  console.log(theme);
   return (
     <>
       <Head>
@@ -14,7 +17,7 @@ function Home() {
       </Head>
       <Page>
         <div>
-          <p>Is this working? </p>
+          <p />
         </div>
         <a>Test?</a>
       </Page>

@@ -16,6 +16,7 @@ const headerStyles = {
 
 const Navigator = props => {
   const [expand] = useState(props.expand);
+  const [theme] = useState(props.theme);
 
   return (
     <div>
@@ -26,7 +27,7 @@ const Navigator = props => {
       >
         <Sidenav
           expanded={expand}
-          appearance="default"
+          appearance={theme}
           style={{ height: '100vh' }}
         >
           <Sidenav.Header>

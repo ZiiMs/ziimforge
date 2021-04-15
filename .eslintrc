@@ -1,3 +1,7 @@
 {
-  "extends": "@ijsto"
+  "extends": "@ijsto",
+  // "sort-keys": "false"
+  "rules": {
+    "sort-keys":"off"
+  }
 }
