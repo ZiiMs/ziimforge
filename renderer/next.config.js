@@ -1,5 +1,5 @@
 const withLess = require('@zeit/next-less');
-const path = require('path');
+// const path = require('path');
 
 module.exports = withLess({
   lessLoaderOptions: {
@@ -12,7 +12,6 @@ module.exports = withLess({
       // },
       target: 'electron-renderer',
     });
-    console.log(path.join(__dirname, '/../main/preload.js'));
     return config;
   },
 });

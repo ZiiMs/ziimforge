@@ -4,26 +4,23 @@ import NavBar from '../NavBar/NavBar';
 import Navigator from '../Navigator/Navigator';
 import 'rsuite/lib/styles/themes/dark/index.less';
 import { preference } from '../../context/preferenceContext';
-import { SearchProvider } from '../../context/searchContext';
+// import searchContext from '../../context/searchContext';
 
 const Page = props => {
   const [expanded] = useState(false);
   const { theme } = useContext(preference);
-  console.log('Theme: ', theme);
   return (
-    <SearchProvider>
-      <div>
+    <div>
+      <Container>
+        <Navigator theme={theme} expand={expanded} />
         <Container>
-          <Navigator theme={theme} expand={expanded} />
-          <Container>
-            <Header>
-              <NavBar theme={theme} />
-            </Header>
-            <Content>{props.children}</Content>
-          </Container>
+          <Header>
+            <NavBar theme={theme} />
+          </Header>
+          <Content>{props.children}</Content>
         </Container>
-      </div>
-    </SearchProvider>
+      </Container>
+    </div>
   );
 };
 

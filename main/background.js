@@ -37,11 +37,11 @@ app.on('window-all-closed', () => {
 });
 
 ipcMain.handle('fetchMods', async (event, args) => {
-  console.time('fetchMods');
-  console.log(args);
+  console.time('getMods');
+  const { sort, search } = args;
   const res = await axios
     .get('https://addons-ecs.forgesvc.net/api/v2/addon/search', {
-      params: { gameId: 1, sort: args },
+      params: { gameId: 1, sort, searchFilter: search },
     })
     .then(async response => {
       // console.log(response.data);
@@ -78,7 +78,7 @@ ipcMain.handle('fetchMods', async (event, args) => {
     .catch(error => {
       console.error('Error fetching data: ', error);
     });
-  console.timeEnd('fetchMods');
+  console.timeEnd('getMods');
   // mainWindow.webContents.request('getMods', res);
   return res;
   // event.sender.send('fetchMods', res);

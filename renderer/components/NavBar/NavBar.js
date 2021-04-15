@@ -3,9 +3,10 @@ import Link from 'next/link';
 import { Nav, Navbar, Icon, Dropdown, InputGroup, Input } from 'rsuite';
 import './NavBar.less';
 import 'rsuite/lib/styles/themes/dark/index.less';
-import useSearch from '../../hooks/useSearch';
+import searchContext from '../../context/searchContext';
 
-const { settings, saveSearch } = useSearch();
+// const { settings, saveSearch } = useSearch();
+
 // import 'rsuite/styles/less/index.less';
 
 const NavLink = React.forwardRef((props, ref) => {
@@ -25,8 +26,7 @@ const styles = {
 
 const NavBar = props => {
   const [theme] = useState(props.theme);
-  const [search, setSearch] = useState('');
-  console.log(settings);
+  const [search, setSearch] = useContext(searchContext);
   // const searchContext = useContext(settings);
 
   const handleChange = e => {

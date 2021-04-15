@@ -1,17 +1,12 @@
 import { createContext, useState } from 'react';
 
-export const searchData = createContext('');
+const searchData = createContext('defausdwaerlt');
 
-export const SearchProvider = ({ children, settings }) => {
-  const [currentSearch, setCurrentSearch] = useState(settings || '');
-
-  const saveSearch = values => {
-    setCurrentSearch(values);
-  };
-
+export const SearchProvider = props => {
+  const [currentSearch, setCurrentSearch] = useState('');
   return (
-    <searchData.Provider value={{ settings: currentSearch, saveSearch }}>
-      {children}
+    <searchData.Provider value={[currentSearch, setCurrentSearch]}>
+      {props.children}
     </searchData.Provider>
   );
 };
