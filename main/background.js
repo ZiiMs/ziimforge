@@ -50,6 +50,7 @@ ipcMain.handle('fetchMods', async (event, args) => {
         const {
           id,
           name,
+          slug,
           authors,
           attachments,
           summary,
@@ -67,6 +68,7 @@ ipcMain.handle('fetchMods', async (event, args) => {
           authors,
           websiteUrl,
           attachments,
+          slug,
           summary,
           latestFiles,
           categorySection,

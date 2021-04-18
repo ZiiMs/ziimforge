@@ -30,15 +30,15 @@ const ModDrawer = props => {
   return (
     <Drawer size="xs" show={show} onHide={props.onHide}>
       <Drawer.Header>
-        <Drawer.Title>{mod != null && <h4>{mod.name}</h4>}</Drawer.Title>
-        <a href={mod != null && mod.websiteUrl}>
-          {mod != null && mod.websiteUrl}
-        </a>
+        <Drawer.Title>{mod != null && <p>{mod.name}</p>}</Drawer.Title>
       </Drawer.Header>
       <Drawer.Body>
         {mod != null && <p>{mod.summary}</p>}
         <Placeholder.Paragraph rows={20} />
       </Drawer.Body>
+      <Drawer.Footer>
+        <a href={mod != null && mod.websiteUrl}>{mod != null && mod.slug}</a>
+      </Drawer.Footer>
     </Drawer>
   );
 };
