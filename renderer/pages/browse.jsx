@@ -5,6 +5,7 @@ import { Button, Table, Tag } from 'rsuite';
 import 'rsuite/lib/styles/themes/dark/index.less';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import searchContext from '../context/searchContext';
+import ModDrawer from '../components/ModDrawer/modDrawer';
 
 const ipcRenderer = electron.ipcRenderer || false;
 
@@ -18,21 +19,23 @@ function Browse() {
   const [limit, setLimit] = useState(20);
   const [sortType] = useState('desc');
   const [loading, setLoading] = useState(true);
-  const [search] = useContext(searchContext);
+  const [search, setSearch] = useContext(searchContext);
+  const [showDrawer, setShowDrawer] = useState(false);
+  const [selected, setSelected] = useState(null);
   const { height } = useWindowDimensions();
-  useEffect(() => {
-    ipcRenderer.invoke('fetchMods', 5).then(res => {
-      console.time('invokeMods');
-      console.log('onLoad!📂', res);
-      setMods(res);
-      setLoading(false);
-      console.timeEnd('invokeMods');
-    });
+  // useEffect(() => {
+  //   ipcRenderer.invoke('fetchMods', { sort, search }).then(res => {
+  //     console.time('invokeMods');
+  //     console.log('onLoad!📂', res);
+  //     setMods(res);
+  //     setLoading(false);
+  //     console.timeEnd('invokeMods');
+  //   });
 
-    return () => {
-      ipcRenderer.removeAllListeners('fetchMods');
-    };
-  }, []);
+  //   return () => {
+  //     ipcRenderer.removeAllListeners('fetchMods');
+  //   };
+  // }, []);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -43,6 +46,7 @@ function Browse() {
         setLoading(false);
         console.timeEnd('invokeMods');
       });
+      setPage(1);
     }, 500);
 
     return () => {
@@ -89,6 +93,18 @@ function Browse() {
     setLimit(dataKey);
   };
 
+  // const openDrawer = e => {
+  //   console.log(e);
+  //   setSelected(JSON.stringify(e, null, 2));
+  //   setShowDrawer(true);
+  // };
+
+  const closeDrawer = e => {
+    console.log(e);
+    setSelected(null);
+    setShowDrawer(false);
+  };
+
   const getData = mods.filter((v, i) => {
     const start = limit * (page - 1);
     const end = start + limit;
@@ -101,6 +117,11 @@ function Browse() {
         <title>Browse Mods</title>
       </Head>
       <div>
+        <ModDrawer
+          show={showDrawer}
+          clickedMod={selected}
+          onHide={e => closeDrawer(e)}
+        />
         <Table
           wordWrap
           height={height - 120}
@@ -109,10 +130,23 @@ function Browse() {
           sortColumn={sortColumn}
           sortType={sortType}
           onSortColumn={handleSortColumn}
+          // onRowClick={openDrawer}
         >
           <Column flexGrow={1} align="center" sortable fixed="left">
             <HeaderCell>Name</HeaderCell>
-            <Cell dataKey="name" />
+            <Cell dataKey="name">
+              {data => {
+                const handeClick = () => {
+                  setSelected(JSON.stringify(data, null, 2));
+                  setShowDrawer(true);
+                };
+                return (
+                  <Button appearance="link" onClick={handeClick}>
+                    {data.name}
+                  </Button>
+                );
+              }}
+            </Cell>
           </Column>
 
           <Column width={60} align="center">
@@ -155,10 +189,19 @@ function Browse() {
             <HeaderCell>Authors</HeaderCell>
             <Cell dataKey="authors">
               {data => {
+                const searchAuthor = e => {
+                  setSearch(e);
+                };
                 return (
                   <span key={data.id}>
                     {data.authors.map(author => (
-                      <a> {author.name} </a>
+                      <Button
+                        appearance="link"
+                        // key={author.name}
+                        onClick={() => searchAuthor(author.name)}
+                      >
+                        {author.name}
+                      </Button>
                     ))}
                   </span>
                 );

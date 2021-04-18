@@ -57,14 +57,14 @@ const NavBar = props => {
           </Dropdown>
         </Nav>
         <Nav pullRight>
-          <InputGroup size="sm" style={styles}>
+          <InputGroup inside size="sm" style={styles}>
             <Input
               value={search}
               onChange={data => handleChange(data)}
               size="sm"
             />
-            <InputGroup.Button>
-              <Icon icon="search" />
+            <InputGroup.Button onClick={() => handleChange('')}>
+              <Icon icon="close" />
             </InputGroup.Button>
           </InputGroup>
         </Nav>
