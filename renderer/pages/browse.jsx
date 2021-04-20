@@ -1,11 +1,14 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import electron from 'electron';
 import React, { useEffect, useContext, useState } from 'react';
 import Head from 'next/head';
+import { useRouter } from 'next/router';
 import { Button, Table, Tag } from 'rsuite';
 import 'rsuite/lib/styles/themes/dark/index.less';
 import useWindowDimensions from '../hooks/useWindowDimensions';
 import searchContext from '../context/searchContext';
 import ModDrawer from '../components/ModDrawer/modDrawer';
+import preference from '../context/preferenceContext';
 
 const ipcRenderer = electron.ipcRenderer || false;
 
@@ -20,22 +23,20 @@ function Browse() {
   const [sortType] = useState('desc');
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useContext(searchContext);
+  const [preferences] = useContext(preference);
   const [showDrawer, setShowDrawer] = useState(false);
   const [selected, setSelected] = useState(null);
   const { height } = useWindowDimensions();
-  // useEffect(() => {
-  //   ipcRenderer.invoke('fetchMods', { sort, search }).then(res => {
-  //     console.time('invokeMods');
-  //     console.log('onLoad!📂', res);
-  //     setMods(res);
-  //     setLoading(false);
-  //     console.timeEnd('invokeMods');
-  //   });
+  const router = useRouter();
 
-  //   return () => {
-  //     ipcRenderer.removeAllListeners('fetchMods');
-  //   };
-  // }, []);
+  const { filePath } = preferences;
+
+  useEffect(() => {
+    if (filePath === '') {
+      router.push('/settings');
+    }
+    return () => {};
+  }, [filePath, router]);
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -132,7 +133,7 @@ function Browse() {
           onSortColumn={handleSortColumn}
           // onRowClick={openDrawer}
         >
-          <Column flexGrow={1} align="center" sortable fixed="left">
+          <Column flexGrow={1} align="center" sortable>
             <HeaderCell>Name</HeaderCell>
             <Cell dataKey="name">
               {data => {

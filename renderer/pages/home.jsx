@@ -1,11 +1,22 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect } from 'react';
 import Head from 'next/head';
-// import { preference } from '../context/preferenceContext';
+import { useRouter } from 'next/router';
+import preference from '../context/preferenceContext';
 import searchContext from '../context/searchContext';
 
 function Home() {
-  // const { theme } = useContext(preference);
+  const [preferences] = useContext(preference);
   const [search] = useContext(searchContext);
+  const router = useRouter();
+
+  const { filePath } = preferences;
+
+  useEffect(() => {
+    if (filePath === '') {
+      router.push('/settings');
+    }
+    return () => {};
+  }, [filePath, router]);
   // console.log(search);
   return (
     <>
@@ -15,7 +26,7 @@ function Home() {
       <div>
         <p />
       </div>
-      <a>{search}A test!??</a>
+      <a>{filePath}A test!??</a>
     </>
   );
 }

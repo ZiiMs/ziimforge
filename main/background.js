@@ -1,3 +1,4 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import { app, ipcMain } from 'electron';
 import serve from 'electron-serve';
 import axios from 'axios';

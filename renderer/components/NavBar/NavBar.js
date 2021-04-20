@@ -1,9 +1,10 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Link from 'next/link';
 import { Nav, Navbar, Icon, Dropdown, InputGroup, Input } from 'rsuite';
 import './NavBar.less';
 import 'rsuite/lib/styles/themes/dark/index.less';
 import searchContext from '../../context/searchContext';
+import keyContext from '../../context/keyContext';
 
 // const { settings, saveSearch } = useSearch();
 
@@ -25,9 +26,15 @@ const styles = {
 };
 
 const NavBar = props => {
-  const [theme] = useState(props.theme);
+  const [theme, setTheme] = useState(props.theme);
   const [search, setSearch] = useContext(searchContext);
+  const [key, setKey] = useContext(keyContext);
   // const searchContext = useContext(settings);
+
+  useEffect(() => {
+    setTheme(props.theme);
+    return () => {};
+  }, [props.theme]);
 
   const handleChange = e => {
     setSearch(e);
@@ -38,15 +45,22 @@ const NavBar = props => {
   return (
     <Navbar appearance={theme}>
       <Navbar.Body>
-        <Nav>
+        <Nav activeKey={key}>
           <Nav.Item
+            eventKey={1}
+            onSelect={value => setKey(value)}
             componentClass={NavLink}
             href="/home"
             icon={<Icon icon="home" />}
           >
             Home
           </Nav.Item>
-          <Nav.Item componentClass={NavLink} href="/browse">
+          <Nav.Item
+            componentClass={NavLink}
+            eventKey={2}
+            onSelect={value => setKey(value)}
+            href="/browse"
+          >
             Browse
           </Nav.Item>
           <Nav.Item>Products</Nav.Item>

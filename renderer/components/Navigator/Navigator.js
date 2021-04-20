@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import Link from 'next/link';
-import { Nav, Icon, Dropdown, Sidebar, Sidenav } from 'rsuite';
+import { Nav, Icon, Sidebar, Sidenav } from 'rsuite';
 import './Navigator.less';
 import 'rsuite/lib/styles/themes/dark/index.less';
+import keyContext from '../../context/keyContext';
 
 const headerStyles = {
   background: '#169DE0',
@@ -14,9 +15,29 @@ const headerStyles = {
   whiteSpace: 'nowrap',
 };
 
+const NavLink = React.forwardRef((props, ref) => {
+  const { as, href, ...rest } = props;
+  return (
+    <Link href={href} as={as}>
+      <p ref={ref} {...rest} />
+    </Link>
+  );
+});
+
 const Navigator = props => {
   const [expand] = useState(props.expand);
-  const [theme] = useState(props.theme);
+  const [theme, setTheme] = useState(props.theme);
+  const [key, setKey] = useContext(keyContext);
+
+  useEffect(() => {
+    setTheme(props.theme);
+    return () => {};
+  }, [props.theme]);
+
+  const handleClick = e => {
+    setKey(e);
+    console.log(e);
+  };
 
   return (
     <div>
@@ -45,39 +66,33 @@ const Navigator = props => {
             </div>
           </Sidenav.Header>
           <Sidenav.Body>
-            <Nav>
-              <Nav.Item eventKey="1" active icon={<Icon icon="dashboard" />}>
+            <Nav activeKey={key}>
+              <Nav.Item
+                componentClass={NavLink}
+                eventKey={1}
+                icon={<Icon icon="dashboard" />}
+                onSelect={value => handleClick(value)}
+                href="/home"
+              >
                 Dashboard
               </Nav.Item>
-              <Nav.Item eventKey="2" icon={<Icon icon="group" />}>
+              <Nav.Item
+                // componentClass={NavLink}
+                eventKey={4}
+                icon={<Icon icon="group" />}
+                onSelect={value => handleClick(value)}
+              >
                 User Group
               </Nav.Item>
-              <Dropdown
-                eventKey="3"
-                trigger="hover"
-                title="Advanced"
-                icon={<Icon icon="magic" />}
-                placement="rightStart"
-              >
-                <Dropdown.Item eventKey="3-1">Geo</Dropdown.Item>
-                <Dropdown.Item eventKey="3-2">Devices</Dropdown.Item>
-                <Dropdown.Item eventKey="3-3">Brand</Dropdown.Item>
-                <Dropdown.Item eventKey="3-4">Loyalty</Dropdown.Item>
-                <Dropdown.Item eventKey="3-5">Visit Depth</Dropdown.Item>
-              </Dropdown>
-              <Dropdown
-                eventKey="4"
-                trigger="hover"
-                title="Settings"
+              <Nav.Item
+                componentClass={NavLink}
+                eventKey={3}
+                onSelect={value => handleClick(value)}
                 icon={<Icon icon="gear-circle" />}
-                placement="rightStart"
+                href="/settings"
               >
-                <Dropdown.Item eventKey="4-1">Applications</Dropdown.Item>
-                <Dropdown.Item eventKey="4-2">Websites</Dropdown.Item>
-                <Dropdown.Item eventKey="4-3">Channels</Dropdown.Item>
-                <Dropdown.Item eventKey="4-4">Tags</Dropdown.Item>
-                <Dropdown.Item eventKey="4-5">Versions</Dropdown.Item>
-              </Dropdown>
+                Settings
+              </Nav.Item>
             </Nav>
           </Sidenav.Body>
         </Sidenav>
